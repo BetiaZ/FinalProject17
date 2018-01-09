@@ -1,12 +1,12 @@
 # - have checkpoints where you can rest
 # - can die of starvation, disease, or drowning
-# - can hunt (random pounds of food), set how many miles you want to go per day
+# - can hunt (random pounds of food)
 # - goal: get to the end in the shortest number of days possible
 # - random factors: lose clothes in river, bad weather delays, food spoils, find food or abandoned supplies
-#checkpoint 2: really cold, die if you don't have clothes
-#c3: store again
-#c4: river- if you choose the wrong option, (i.e., you realize that you don't know how to swim, or lose your clothes) you DIE
-#c5: you're alive! if you have enough money left, you can take the boat home, if you don't, you realize you will have to survive on the island for eternity
+#checkpoint 3: really cold, die if you don't have clothes
+#c4: store again
+#c5: river- if you choose the wrong option, (i.e., you realize that you don't know how to swim, or lose your clothes) you DIE
+#c6 (at 0): you're alive! if you have enough money left, you can take the boat home, if you don't, you realize you will have to survive on the island for eternity
 
 #introduction
 print("""ISLAND ADVENTURE
@@ -106,13 +106,14 @@ def store1():
         print(f"""\n You bought {pieces} pieces of clothing. You now have {a.inventory['money']} dollars. \n""")
         store1()
     elif d == 3:
-        a.day -= 1
+        a.day += 1
         a.health = 100
         a.inventory['money'] -= 10
         print(f"""\n You stayed in the sketchy hut overnight. Even though the bed was made of hay, you feel rested.
         It is now Day {a.day}. You have {a.inventory['money']} dollars left.\n """)
         a.list_status()
-        break
+        a.distance_left = 10
+        ckpt1()
     elif d == 4:
         a.distance_left = 10
         a.list_walk()
@@ -152,8 +153,46 @@ if a.total_distance == 35 and a.inventory['food'] == 0:
     print("You went too long without food. You have died of starvation. :( \n ***THE END***")
 
 if a.total_distance == 35 and a.inventory['food'] > 0:
-    a.distance_left = 10
     ckpt1()
-#you forgot to buy another piece of clothing, like a jacket, at the vendor's hut
+
+def ckpt3():
+    a.distance_left = 10
+    a.health -= 10
+    d = int(input(f"""The temperature has dropped over 30 degrees and it has started to snow.
+    Luckily, you have a warm jacket that you bought from the sketchy vendor.
+    Even though you are freezing, you are still able to survive.
+    What would you like to do?
+    1. Inventory
+    2. Status
+    3. Stop to rest
+    4. Keep going (miles left: {a.distance_left}\n - """))
+    if d == 1:
+        a.list_inventory()
+    if d == 2:
+        a.list_status()
+    if d == 3:
+        days = int(input("How many days?\n - "))
+        a.day += days
+        a.health += days * 5
+        print(f"You rested for {days} days. You feel much better and it has gotten warmer.")
+        a.list_status()
+    if d == 4:
+        a.distance_left = 10
+        a.list_walk()
+    else:
+        print("""invalid input. try again \n - """)
+        ckpt3()
+
+if a.total_distance == 30 and a.inventory['clothes'] <= 2 and a.inventory['food'] > 0:
+    print("""The temperature has dropped over 30 degrees and it has started to snow.
+    You realize that you are shivering and forgot to buy another piece of clothing, like a jacket, at the vendors hut.
+    Throughout the course of the day, you develop hypothermia and die. :(
+    ***THE END***""")
+if a.total_distance == 30 and a.inventory['clothes'] > 2 and a.inventory['food'] == 0:
+    a.health -= 10
+    print(f"You have no food and are starving. Your health is now {a.health}")
+if a.total_distance == 30 and a.inventory['clothes'] > 2 and a.inventory['food'] > 0:
+    ckpt3()
+
 #MAKE SURE TO PUT A LIMIT WHEN MONEY > 0
 
