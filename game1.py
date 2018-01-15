@@ -1,10 +1,6 @@
-# - have checkpoints where you can rest
-# - can die of starvation, disease, or drowning
-# - can hunt (random pounds of food)
-# - goal: get to the end in the shortest number of days possible
 # - random factors: lose clothes in river, bad weather delays, food spoils, find food or abandoned supplies
 #checkpoint 3: really cold, die if you don't have clothes
-#c4: store again
+#c4: hunt, rest
 #c5: river- if you choose the wrong option, (i.e., you realize that you don't know how to swim, or lose your clothes) you DIE
 #c6 (at 0): you're alive! if you have enough money left, you can take the boat home, if you don't, you realize you will have to survive on the island for eternity
 
@@ -52,6 +48,8 @@ class Character(object):
             #food decreases with each day
             if self.inventory['food'] > 0:
                 self.inventory['food'] -= 2
+            if self.health > 0:
+                self.health -= 2
             print(f"""
 
             Day: {self.day} --- Next Checkpoint in: {self.distance_left} miles
@@ -168,15 +166,15 @@ def ckpt3():
     4. Keep going (miles left: {a.distance_left}\n - """))
     if d == 1:
         a.list_inventory()
-    if d == 2:
+    elif d == 2:
         a.list_status()
-    if d == 3:
+    elif d == 3:
         days = int(input("How many days?\n - "))
         a.day += days
         a.health += days * 5
         print(f"You rested for {days} days. You feel much better and it has gotten warmer.")
         a.list_status()
-    if d == 4:
+    elif d == 4:
         a.distance_left = 10
         a.list_walk()
     else:
@@ -194,5 +192,79 @@ if a.total_distance == 30 and a.inventory['clothes'] > 2 and a.inventory['food']
 if a.total_distance == 30 and a.inventory['clothes'] > 2 and a.inventory['food'] > 0:
     ckpt3()
 
-#MAKE SURE TO PUT A LIMIT WHEN MONEY > 0
+def hunt():
+    import random
+    h = int(input("""Choose your weapon:
+    1. Bow and Arrows
+    2. Rifle
+    3. Knife
+    4. Sheer luck\n - """))
+    if h == 1:
+        g = random.randint(0,15)
+        a.inventory['food'] += g
+        print(f"You have chosen to hunt. You have killed a deer and collected {g} pounds of food. Congrats!")
+        print(f"You now have {a.inventory['food']} pounds of food.")
+    elif h == 2:
+        i = random.randint(0,20)
+        a.inventory['food'] += i
+        print(f"You have chosen to hunt. You have killed a deer and collected {i} pounds of food. Congrats!")
+        print(f"You now have {a.inventory['food']} pounds of food.")
+    elif h == 3:
+        j = random.randint(0,10)
+        a.inventory['food'] += j
+        print(f"You have chosen to hunt. You have killed a rabbit and collected {j} pounds of food. Congrats!")
+        print(f"You now have {a.inventory['food']} pounds of food.")
+    elif h == 4:
+        k = random.randint(0,5)
+        a.inventory['food'] += k
+        print(f"You have chosen to hunt. You have managed to catch a squirrel and collected {k} pounds of food. Congrats!")
+        print(f"You now have {a.inventory['food']} pounds of food.")
+    else:
+        print("""invalid input. try again \n - """)
+        hunt()
+
+def ckpt4():
+    a.distance_left = 10
+    e = int(input(f"""You have made it past the mountain range. Surprisingly, you feel hopeful.
+    You reach a small clearing in the forest.
+    You have {a.inventory['food']} pounds of food left. What would you like to do?
+    1. Inventory
+    2. Status
+    3. Stop to rest
+    4. Hunt for food
+    5. Keep going (miles left: {a.distance_left} \n - """))
+    if e == 1:
+        a.list_inventory()
+    elif e == 2:
+        a.list_status()
+    elif e == 3:
+        f = int(input(""""How many days would you like to rest?
+        Your health will increase by 5 for every night you rest.\n - """))
+        a.day += f
+        a.health += f * 5
+        print(f"""You rested for {f} days. You feel ready to continue your journey.""")
+        a.list_status()
+    elif e == 4:
+        hunt()
+    elif e == 5 and a.inventory['food'] > 0:
+        a.list_walk()
+    elif e == 5 and a.inventory['food'] == 0:
+        print("You have run out of food and come down with dysentery.\n You have died. :(\n ***THE END***")
+    else:
+        print("""invalid input. try again \n - """)
+        ckpt4()
+
+if a.total_distance == 25 and a.inventory['food'] == 0:
+    print("You went too long without food. You have died of starvation. :( \n ***THE END***")
+
+if a.total_distance == 25 and a.inventory['food'] > 0:
+   ckpt1()
+
+if a.total_distance == 20 and a.inventory['food'] > 0:
+    ckpt4()
+
+if a.total_distance == 20 and a.inventory['food'] == 0:
+    print("You have run out of food and come down with dysentery.\n You have died. :(\n ***THE END***")
+# FIGURE OUT THE INVALID PROBLEM
+
 
