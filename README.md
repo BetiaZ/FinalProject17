@@ -7,4 +7,9 @@ The player can move 5 miles at a time, and at each checkpoint the player has mor
 buy supplies, or rest.
 Uses while and for loops so that the player can choose more than one option each time they are presented with them.
 
-I defined many funcitons that would run once the player reached a certain amount of distance left.
+I defined many functions that would run once the player reached a certain amount of distance left.
+For example, hunting, inventory, status. 
+
+Sources used:
+  https://docs.python.org/3.0/library/random.html
+  Used to import the random module and learn how to use random.randint()
